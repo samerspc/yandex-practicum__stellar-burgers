@@ -85,7 +85,12 @@ export const getFeedsApi = () =>
     .then((data) => {
       if (data?.success) return data;
       return Promise.reject(data);
-    });
+    })
+    .then((data) => ({
+      orders: data.orders,
+      total: data.total,
+      totalToday: data.totalToday
+    }));
 
 export const getOrdersApi = () =>
   fetchWithRefresh<TFeedsResponse>(`${URL}/orders`, {
