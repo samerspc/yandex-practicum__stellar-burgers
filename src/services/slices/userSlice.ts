@@ -9,7 +9,8 @@ import {
   TLoginData,
   TRegisterData
 } from '@api';
-import { TUser } from '@utils-types';
+import { TUser } from '../../utils/types';
+import { setCookie, deleteCookie } from '../../utils/cookie';
 
 type UserState = {
   isInit: boolean;
@@ -30,6 +31,8 @@ export const loginUser = createAsyncThunk(
   async (data: TLoginData, { rejectWithValue }) => {
     try {
       const response = await loginUserApi(data);
+      setCookie('accessToken', response.accessToken);
+      localStorage.setItem('refreshToken', response.refreshToken);
       return response.user;
     } catch (error: any) {
       return rejectWithValue(error?.message || 'Failed to login user');
@@ -42,6 +45,8 @@ export const registerUser = createAsyncThunk(
   async (data: TRegisterData, { rejectWithValue }) => {
     try {
       const res = await registerUserApi(data);
+      setCookie('accessToken', res.accessToken);
+      localStorage.setItem('refreshToken', res.refreshToken);
       return res.user;
     } catch (e: any) {
       return rejectWithValue(e.message);
@@ -78,6 +83,8 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await logoutApi();
+      deleteCookie('accessToken');
+      localStorage.removeItem('refreshToken');
       return null;
     } catch (e: any) {
       return rejectWithValue(e.message);
@@ -109,21 +116,63 @@ const userSlice = createSlice({
         state.error = action.payload as string;
       })
 
+      .addCase(registerUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(registerUser.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.user = action.payload;
+        state.isInit = true;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
       })
 
+      .addCase(fetchUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(fetchUser.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.isInit = true;
         state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isInit = true;
+        state.user = null;
+        state.error = action.payload as string;
+        deleteCookie('accessToken');
+        localStorage.removeItem('refreshToken');
       })
 
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(updateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.user = action.payload;
       })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
 
+      .addCase(logoutUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(logoutUser.fulfilled, (state) => {
+        state.isLoading = false;
         state.user = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
       });
   }
 });
@@ -131,11 +180,10 @@ const userSlice = createSlice({
 export const { init } = userSlice.actions;
 export default userSlice.reducer;
 
-export const selectUserState = (state: { user: UserState }) => state.user;
-export const selectUser = (state: { user: UserState }) => state.user.user;
-export const selectIsAuthorized = (state: { user: UserState }) =>
+export const selectUserState = (state: RootState) => state.user;
+export const selectUser = (state: RootState) => state.user.user;
+export const selectIsAuthorized = (state: RootState) =>
   Boolean(state.user.user);
-export const selectUserLoading = (state: { user: UserState }) =>
-  state.user.isLoading;
-export const selectUserInit = (state: { user: UserState }) => state.user.isInit;
-export const selectUserError = (state: { user: UserState }) => state.user.error;
+export const selectUserLoading = (state: RootState) => state.user.isLoading;
+export const selectUserInit = (state: RootState) => state.user.isInit;
+export const selectUserError = (state: RootState) => state.user.error;
