@@ -9,7 +9,7 @@ import {
 
 import { Preloader } from '@ui';
 
-export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
+export const AuthRoute = ({ children }: { children: ReactNode }) => {
   const user = useSelector(selectUser);
   const isInit = useSelector(selectUserInit);
   const isLoading = useSelector(selectUserLoading);
@@ -19,8 +19,8 @@ export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
     return <Preloader />;
   }
 
-  if (!user) {
-    return <Navigate replace to='/login' state={{ from: location }} />;
+  if (user) {
+    return <Navigate replace to='/' state={{ from: location }} />;
   }
 
   return <>{children}</>;
