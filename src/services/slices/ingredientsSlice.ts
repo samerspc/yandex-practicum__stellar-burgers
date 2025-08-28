@@ -37,15 +37,15 @@ const ingredientsSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchIngredients.fulfilled, (state, aciton) => {
+      .addCase(fetchIngredients.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.list = aciton.payload;
+        state.list = action.payload;
         state.error = null;
       })
-      .addCase(fetchIngredients.rejected, (state, aciton) => {
+      .addCase(fetchIngredients.rejected, (state, action) => {
         state.isLoading = false;
         state.error =
-          (aciton.payload as string) ?? 'Failed to fetch ingredients';
+          (action.payload as string) ?? 'Failed to fetch ingredients';
       });
   }
 });
