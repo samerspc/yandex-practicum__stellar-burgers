@@ -23,9 +23,23 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DefaultOrderStatus: Story = {
+export const PendingStatus: Story = {
   args: {
     textStyle: '#E52B1A',
     text: 'Готовится'
+  }
+};
+
+export const DoneStatus: Story = {
+  args: {
+    textStyle: '#00CCCC',
+    text: 'Выполнен'
+  }
+};
+
+export const CreatedStatus: Story = {
+  args: {
+    textStyle: '#F2F2F3',
+    text: 'Создан'
   }
 };
