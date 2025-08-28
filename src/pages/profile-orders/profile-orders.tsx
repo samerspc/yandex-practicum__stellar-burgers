@@ -44,8 +44,5 @@ export const ProfileOrders: FC = () => {
     return <div>Ошибка загрузки заказов: {error}</div>;
   }
 
-  console.log('Orders:', orders);
-  console.log('Ingredients:', ingredients.length);
-
   return <ProfileOrdersUI orders={orders} />;
 };

@@ -13,17 +13,19 @@ import {
 import { selectIngredients } from '../../services/slices/ingredientsSlice';
 
 export const OrderInfo: FC = () => {
-  const { number } = useParams<{ number: string }>();
+  const { number, id } = useParams<{ number?: string; id?: string }>();
   const dispatch = useDispatch();
   const orderData = useSelector(selectCurrentOrder);
   const isLoading = useSelector(selectOrderLoading);
   const ingredients = useSelector(selectIngredients);
 
+  const orderNumber = number || id;
+
   useEffect(() => {
-    if (number) {
-      dispatch(fetchOrderByNumber(parseInt(number)));
+    if (orderNumber) {
+      dispatch(fetchOrderByNumber(parseInt(orderNumber)));
     }
-  }, [number, dispatch]);
+  }, [orderNumber, dispatch]);
 
   useEffect(() => {
     if (!ingredients.length) {
