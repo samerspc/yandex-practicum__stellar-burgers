@@ -24,6 +24,7 @@ export const IngredientsCategory = forwardRef<
       });
     }
     if (bun) counters[bun._id] = 2;
+
     return counters;
   }, [bun, constructorIngredients]);
 
