@@ -21,8 +21,10 @@ export const fetchIngredients = createAsyncThunk<TIngredient[]>(
     try {
       const response = await getIngredientsApi();
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error?.message || 'Failed to fetch ingredients');
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to fetch ingredients';
+      return rejectWithValue(errorMessage);
     }
   }
 );

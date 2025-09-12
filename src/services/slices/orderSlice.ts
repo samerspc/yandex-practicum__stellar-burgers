@@ -23,8 +23,10 @@ export const createOrder = createAsyncThunk<TOrder, string[]>(
     try {
       const res = await orderBurgerApi(ingredientIds);
       return res.order as TOrder;
-    } catch (e: any) {
-      return rejectWithValue(e?.message ?? 'Failed create order');
+    } catch (e: unknown) {
+      const errorMessage =
+        e instanceof Error ? e.message : 'Failed create order';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -37,8 +39,9 @@ export const fetchOrderByNumber = createAsyncThunk<TOrder, number>(
       const order = res.orders?.[0] as TOrder | undefined;
       if (!order) throw new Error('Order not found');
       return order;
-    } catch (e: any) {
-      return rejectWithValue(e?.message ?? 'Failed get order');
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Failed get order';
+      return rejectWithValue(errorMessage);
     }
   }
 );

@@ -1,4 +1,4 @@
-import { TOrder } from './types';
+import { TOrder, TIngredient } from './types';
 
 export const getOrderStatus = (status: string): string => {
   switch (status) {
@@ -32,7 +32,7 @@ export const getOrderStatusColor = (status: string): string => {
 
 export const calculateOrderPrice = (
   order: TOrder,
-  ingredients: any[]
+  ingredients: TIngredient[]
 ): number => {
   if (!order.ingredients || !ingredients.length) return 0;
 
@@ -44,8 +44,8 @@ export const calculateOrderPrice = (
 
 export const getOrderIngredients = (
   order: TOrder,
-  ingredients: any[]
-): any[] => {
+  ingredients: TIngredient[]
+): (TIngredient & { count: number })[] => {
   if (!order.ingredients || !ingredients.length) return [];
 
   const ingredientCounts: { [key: string]: number } = {};
@@ -57,10 +57,11 @@ export const getOrderIngredients = (
   return Object.entries(ingredientCounts)
     .map(([id, count]) => {
       const ingredient = ingredients.find((ing) => ing._id === id);
+      if (!ingredient) return null;
       return {
         ...ingredient,
         count
       };
     })
-    .filter(Boolean);
+    .filter((item): item is TIngredient & { count: number } => item !== null);
 };

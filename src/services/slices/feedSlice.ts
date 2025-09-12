@@ -25,8 +25,10 @@ export const fetchFeeds = createAsyncThunk<TOrdersData>(
     try {
       const response = await getFeedsApi();
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error?.message || 'Failed to fetch feeds');
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to fetch feeds';
+      return rejectWithValue(errorMessage);
     }
   }
 );

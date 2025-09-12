@@ -54,10 +54,10 @@ export const useProfile = () => {
 
       dispatch(saveUserData());
       dispatch(setUser(updatedUser.user));
-    } catch (error: any) {
-      dispatch(
-        setProfileError(error?.message || 'Ошибка при обновлении данных')
-      );
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Ошибка при обновлении данных';
+      dispatch(setProfileError(errorMessage));
     } finally {
       dispatch(setProfileLoading(false));
     }

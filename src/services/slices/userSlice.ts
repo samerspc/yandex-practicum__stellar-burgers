@@ -34,8 +34,10 @@ export const loginUser = createAsyncThunk(
       setCookie('accessToken', response.accessToken);
       localStorage.setItem('refreshToken', response.refreshToken);
       return response.user;
-    } catch (error: any) {
-      return rejectWithValue(error?.message || 'Failed to login user');
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to login user';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -48,8 +50,9 @@ export const registerUser = createAsyncThunk(
       setCookie('accessToken', res.accessToken);
       localStorage.setItem('refreshToken', res.refreshToken);
       return res.user;
-    } catch (e: any) {
-      return rejectWithValue(e.message);
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Unknown error';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -60,8 +63,9 @@ export const fetchUser = createAsyncThunk(
     try {
       const res = await getUserApi();
       return res.user;
-    } catch (e: any) {
-      return rejectWithValue(e.message);
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Unknown error';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -72,8 +76,9 @@ export const updateUser = createAsyncThunk(
     try {
       const res = await updateUserApi(userData);
       return res.user;
-    } catch (e: any) {
-      return rejectWithValue(e.message);
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Unknown error';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -86,8 +91,9 @@ export const logoutUser = createAsyncThunk(
       deleteCookie('accessToken');
       localStorage.removeItem('refreshToken');
       return null;
-    } catch (e: any) {
-      return rejectWithValue(e.message);
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Unknown error';
+      return rejectWithValue(errorMessage);
     }
   }
 );

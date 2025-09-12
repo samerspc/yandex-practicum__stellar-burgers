@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, FC } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useSelector } from 'react-redux';
-import { useDispatch } from '../../services/store';
+import { useDispatch, RootState } from '../../services/store';
 
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
@@ -13,7 +13,9 @@ import {
 export const BurgerIngredients: FC = () => {
   const dispatch = useDispatch();
   const ingredients = useSelector(selectIngredients);
-  const isLoading = useSelector((state: any) => state.ingredients.isLoading);
+  const isLoading = useSelector(
+    (state: RootState) => state.ingredients.isLoading
+  );
 
   const buns = ingredients
     ? ingredients.filter((item) => item.type === 'bun')

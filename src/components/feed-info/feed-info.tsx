@@ -21,6 +21,7 @@ export const FeedInfo: FC = () => {
   const totalToday = useSelector(selectFeedTotalToday);
 
   const feed = {
+    orders,
     total,
     totalToday
   };

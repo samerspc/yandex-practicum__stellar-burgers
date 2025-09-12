@@ -25,10 +25,12 @@ export const fetchProfileOrders = createAsyncThunk<TOrder[]>(
     try {
       const response = await getOrdersApi();
       return response;
-    } catch (error: any) {
-      return rejectWithValue(
-        error?.message || 'Failed to fetch profile orders'
-      );
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch profile orders';
+      return rejectWithValue(errorMessage);
     }
   }
 );
