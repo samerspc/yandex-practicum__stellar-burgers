@@ -28,5 +28,13 @@
       "@selectors": ["src/services/selectors"]
     }
   },
-  "include": ["src"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "src/stories/**/*",
+    "src/**/*.stories.*",
+    "src/**/*.test.*",
+    "src/**/*.spec.*"
+  ]
 }
